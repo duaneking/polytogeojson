@@ -15,6 +15,19 @@ describe('#polytogeojson', function () {
     });
 });
 
+/*
+ * Actual Convert .poly to .geojson for one-off converts.
+ */
+function convert(actual, wanted) {
+    var poly = polytogeojson(fs.readFileSync(actual, { encoding: 'utf8' }));
+
+	fs.writeFile(wanted, JSON.stringify(poly, null, null), (err) => {
+		if (err) {
+			throw err;
+		}
+	});
+}
+
 function test(actual, expected) {
     var poly = polytogeojson(fs.readFileSync(actual, { encoding: 'utf8' }));
 		
