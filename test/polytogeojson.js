@@ -1,5 +1,6 @@
 var polytogeojson = require('../lib/polytogeojson.js');
 
+var os = require("os");
 var assert = require('assert');
 var fs = require('fs');
 
@@ -9,6 +10,9 @@ describe('#polytogeojson', function () {
     });
     it('north-america.poly', function () {
         test('test/data/north-america.poly', 'test/data/north-america.geojson');
+    });
+    it('north-america-v2.poly', function () {
+        test('test/data/north-america-v2.poly', 'test/data/north-america-v2.geojson');
     });
     it('complex.poly', function () {
         test('test/data/complex.poly', 'test/data/complex.geojson');
@@ -20,16 +24,15 @@ describe('#polytogeojson', function () {
  */
 function convert(actual, wanted) {
     var poly = polytogeojson(fs.readFileSync(actual, { encoding: 'utf8' }));
+	var json = JSON.stringify(poly);
 
-	fs.writeFile(wanted, JSON.stringify(poly, null, null), (err) => {
-		if (err) {
-			throw err;
-		}
-	});
+	fs.writeFileSync(wanted, json + os.EOL);
 }
 
 function test(actual, expected) {
     var poly = polytogeojson(fs.readFileSync(actual, { encoding: 'utf8' }));
-		
-    assert.deepEqual(poly, JSON.parse(fs.readFileSync(expected)));
+	var file = fs.readFileSync(expected);
+	var json = JSON.parse(file);
+
+    assert.deepEqual(poly, json);
 }
